@@ -1,7 +1,5 @@
 # This will finish soon
 
-===
-
 this calculator show how to encode & decode
 message in UPPERCASE
 
