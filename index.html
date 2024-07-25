@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matrix Cryptography</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/brython@3.9.5/brython.min.js"></script>
+    <style>
+        :root {
+            --gray: rgb(46, 46, 46);
+        }
+        html, body {
+            color: var(--gray);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-size: 1.1em;
+            margin: 0;
+            height: 100%;
+            background-color: #796a6a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        main {
+            margin: 20% 5%;
+            margin-top: 100%;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 30px 50px;
+            box-shadow: 0 0 10px var(--gray);
+        }
+        form {
+            border: 1.8px solid var(--gray);
+            padding: 5% calc(30px + 5%);
+            border-radius: 5px;
+            text-align: center;
+            width: 60%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .form_matrix {
+            border: none;
+            display: block;
+            width: 100%;
+        }
+        .input_string {
+            width: 200px;
+        }
+        .e_matrix {
+            width: 30px;
+            text-align: center;
+        }
+        input[type=text] {
+            box-sizing: border-box;
+            font-weight: bold;
+            border: 1.8px solid var(--gray);
+            padding: 2%;
+            outline: none;
+            border-radius: 4px;
+            color: var(--gray);
+        }
+        input[type=text]:focus {
+            border: 2px solid dodgerblue;
+            box-shadow: 0 0 5px dodgerblue;
+            color: rgb(44, 61, 114);
+        }
+        hr {
+            border: 1.8px solid dodgerblue;
+            width: 70%;
+        }
+        h1::first-letter {
+            color: dodgerblue;
+        }
+        .h2-encode {
+            color: rgb(29, 94, 158);
+        }
+        .h2-decode {
+            color: rgb(44, 61, 114);
+        }
+        button {
+            appearance: none;
+            background-color: rgb(228, 228, 228);
+            border: 2px solid rgb(60, 106, 153);
+            border-radius: 5px;
+            box-sizing: border-box;
+            box-shadow: 0 0 0 dodgerblue;
+            color: var(--gray);
+            cursor: pointer;
+            display: inline-block;
+            font-size: 0.8em;
+            font-weight: bold;
+            transition: 0.05s ease-out;
+        }
+        button:hover {
+            border: 2px solid dodgerblue;
+            box-shadow: 0 0 5px dodgerblue;
+        }
+        button:active {
+            background-color: dodgerblue;
+            color: white;
+        }
+        form ~ p {
+            font-weight: 500;
+            margin-top: 10px;
+        }
+        p > span {
+            font-weight: 500;
+            background-color: rgba(134, 134, 134, 0.15);
+            padding: 3px 2px 5px 4px;
+            border-radius: 10px;
+            text-align: center;
+            margin-left: 5px;
+            margin-top: 3px;
+            display: block;
+        }
+        span.credit-mini {
+            font-weight: lighter;
+            font-size: smaller;
+        }
+        .matrix_text {
+            font-weight: 500;
+            color: rgb(29, 94, 158);
+        }
+    </style>
+</head>
+<body onload="brython()">
+    <main>
+    <header>
+    <h1 class="text-primary">Matrix Cryptography</h1>
+    <hr>
+    </header>
+    <h2 class="h2-encode">Encode</h2>
+    <form class="form" id="encode_form">
+        <label for="encode_string">String to encode:</label><br>
+        <input type="text" class="input_string" id="encode_string" placeholder="HELLO" oninput="validateStringInput(event)"><br>
+        <button type="button" id="encode_button">Encode</button>
+    </form>
+
+    <p>Encoded Output: <span id="encoded_output"></span></p>
+    
+    <h2 class="h2-decode">Decode</h2>
+    <form class="form" id="decode_form">
+        <label for="decode_list">List to decode:</label><br>
+        <input type="text" class="input_string" id="decode_list" placeholder="[?, ?, ?] / ? ? ?"><br>
+        <button type="button" id="decode_button">Decode</button>
+    </form>
+    <p>Decoded Output: <span id="decoded_output"></span></p>
+    <hr>
+    <form class="form_matrix">
+        <label class="matrix_text" for="encode_matrix">Matrix (3x3):</label><br><br>
+        <input type="text" class="e_matrix" id="e_matrix_00" placeholder="1" maxlength="2" onkeypress="validateMatrixInput(event)" value="1" >
+        <input type="text" class="e_matrix" id="e_matrix_01" placeholder="0" maxlength="2" onkeypress="validateMatrixInput(event)" value="-2">
+        <input type="text" class="e_matrix" id="e_matrix_02" placeholder="1" maxlength="2" onkeypress="validateMatrixInput(event)" value="2" ><br>
+        <input type="text" class="e_matrix" id="e_matrix_10" placeholder="0" maxlength="2" onkeypress="validateMatrixInput(event)" value="-1">
+        <input type="text" class="e_matrix" id="e_matrix_11" placeholder="1" maxlength="2" onkeypress="validateMatrixInput(event)" value="1" >
+        <input type="text" class="e_matrix" id="e_matrix_12" placeholder="0" maxlength="2" onkeypress="validateMatrixInput(event)" value="3" ><br>
+        <input type="text" class="e_matrix" id="e_matrix_20" placeholder="1" maxlength="2" onkeypress="validateMatrixInput(event)" value="1" >
+        <input type="text" class="e_matrix" id="e_matrix_21" placeholder="0" maxlength="2" onkeypress="validateMatrixInput(event)" value="-1">
+        <input type="text" class="e_matrix" id="e_matrix_22" placeholder="1" maxlength="2" onkeypress="validateMatrixInput(event)" value="-4"><br><br>
+    </form>
+    <span class="credit-mini">Calculator by Anawin A.</span>
+    </main>
+    <script>
+        'use strict';
+        document.querySelectorAll('input[type="text"]').forEach(input => {
+            input.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter') {
+                    event.preventDefault(); // Prevent form submission or default behavior
+                    const inputs = Array.from(document.querySelectorAll('input[type="text"]'));
+                    const index = inputs.indexOf(event.target);
+                    console.log("hi")
+                    if (index !== -1 && index < inputs.length - 1) {
+                        inputs[index + 1].focus(); // Focus the next input
+                    }
+                }
+            });
+        });
+        function validateMatrixInput(event) {
+            var char = String.fromCharCode(event.which);
+            if (!/[0-9-]/.test(char)) {
+                event.preventDefault();
+            }
+        }
+        function validateStringInput(event) {
+            var input = event.target.value;
+            event.target.value = input.toUpperCase().replace(/[^A-Z ]/g, '');
+        }
+    </script>
+    <script type="text/python" src="script.py"></script>
+</body>
+</html>
